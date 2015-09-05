@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class ZombieController : MonoBehaviour {
 	public GameObject preceding;
 	private float distance;
@@ -8,20 +9,24 @@ public class ZombieController : MonoBehaviour {
 	private Rigidbody rbz;
 	public float speedup;
 	private SphereCollider rbzpreceding;
+	private ZombieBehaviour zombieBehaviour;
 
 	// Use this for initialization
 	void Start () {
 		distance = Vector3.Distance (preceding.transform.position, transform.position);
 		rbz = GetComponent<Rigidbody> ();
 		rbzpreceding = preceding.GetComponent<SphereCollider> ();
+		zombieBehaviour = new FirstBehaviour ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Vector3.Distance (preceding.transform.position, transform.position) > 1) {
-			Vector3 direction= preceding.transform.position- transform.position;
-			rbz.AddForce(Time.deltaTime*direction* (speed + speedup*Time.time));
-		}
+		rbz.AddForce(zombieBehaviour.forceToAdd(transform.position, preceding.transform.position, rbz.velocity, rbzpreceding.velocity, speed, speedup));
+
+		//if (Vector3.Distance (preceding.transform.position, transform.position) > 1) {
+		//	Vector3 direction= preceding.transform.position- transform.position;
+		//	rbz.AddForce(Time.deltaTime*direction* (speed + speedup*Time.time));
+		//}
 
 		//try to do an OK pathfinder... as in, go around stuff. so not a pathfinder at all, just something that doesnt collide with walls and stuff.
 		//Vector3 positionpreceding = preceding.transform.position + Time.deltaTime * rbzpreceding.velocity;
